@@ -9,23 +9,29 @@ def main():
     if not token:
         raise SystemExit(
             "Missing HF_TOKEN environment variable.\n"
-            "Set it like: export HF_TOKEN='your_huggingface_token'\n"
-            "Then re-run."
+            'Set it like: export HF_TOKEN="hf_..." then re-run.'
         )
 
-    # Requires HF access; commonly used diarization pipeline:
-    pipeline = Pipeline.from_pretrained(
-        "pyannote/speaker-diarization-3.1",
-        use_auth_token=token,
-    )
+    # Newer pyannote versions use `token=...`; older ones use `use_auth_token=...`.
+    try:
+        pipeline = Pipeline.from_pretrained(
+            "pyannote/speaker-diarization-3.1",
+            token=token,
+        )
+    except TypeError:
+        pipeline = Pipeline.from_pretrained(
+            "pyannote/speaker-diarization-3.1",
+            use_auth_token=token,
+        )
 
-    diarization = pipeline(audio_path)
+    output = pipeline(audio_path)
 
-    # Print RTTM-like output: start, end, speaker label
+    # In your version, `pipeline(...)` returns DiarizeOutput with attribute `speaker_diarization`
+    diarization = output.speaker_diarization
+
+    # Iterate segments
     for turn, _, speaker in diarization.itertracks(yield_label=True):
-        start = turn.start
-        end = turn.end
-        print(f"{start:.2f}\t{end:.2f}\t{speaker}")
+        print(f"{turn.start:.2f}\t{turn.end:.2f}\t{speaker}")
 
 
 if __name__ == "__main__":
