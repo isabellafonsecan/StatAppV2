@@ -1,21 +1,20 @@
 import os
-from huggingface_hub import hf_hub_download
+from datasets import load_dataset
 
-# Path to the persistent cache directory
-CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "huggingface_hub")
+# Set persistent cache directory for SSP Cloud DataLab
+# /home/onyxia/work persists across sessions
+cache_dir = os.path.join("/home/onyxia/work", ".cache", "huggingface/datasets")
+os.makedirs(cache_dir, exist_ok=True)
 
-# Ensure the cache directory exists
-os.makedirs(CACHE_DIR, exist_ok=True)
+# Get token from environment variable
+token = os.getenv("HF_TOKEN")
 
-# Replace 'your_huggingface_token' with your actual Hugging Face token
-HUGGINGFACE_TOKEN = 'your_huggingface_token'
+# Load dataset with caching
+ds = load_dataset(
+    "marsianin500/Speech2Latex",
+    cache_dir=cache_dir
+)
 
-# Function to download the Speech2Latex dataset
-
-def download_speech2latex():
-    dataset_path = hf_hub_download(repo_id='speech2latex', cache_dir=CACHE_DIR, use_auth_token=HUGGINGFACE_TOKEN)
-    print(f"Dataset downloaded to: {dataset_path}")
-
-# Example usage
-if __name__ == '__main__':
-    download_speech2latex()
+print(f"✅ Dataset loaded successfully!")
+print(f"📁 Cache directory: {cache_dir}")
+print(f"📊 Dataset info: {ds}")

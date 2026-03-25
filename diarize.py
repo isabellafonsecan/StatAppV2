@@ -3,7 +3,7 @@ from pyannote.audio import Pipeline
 
 
 def main():
-    audio_path = "audio.mp3"
+    audio_path = "audio.wav"
 
     token = os.getenv("HF_TOKEN")
     if not token:

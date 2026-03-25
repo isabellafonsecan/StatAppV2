@@ -1,9 +1,12 @@
 openai-whisper
-pyannote.audio
-datasets[audio]
+datasets[audio] >= 1.18.0
 transformers
 accelerate
 evaluate
 jiwer
 tensorboard
 gradio
+torch >= 1.5
+torchaudio
+librosa
+huggingface_hub

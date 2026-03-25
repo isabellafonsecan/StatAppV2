@@ -21,4 +21,3 @@ pip install -r requirements.txt
 
 # Run transcription + diarization
 python transcribe.py
-python diarize.py
